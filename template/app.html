@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Heart Disease Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='stylesheets/app.css') }}" />
+    <style>
+        .bg{
+            background: rgba(0, 0, 0, 0.7) url("{{url_for('static', filename='heart.jpg')}}");
+            background-size: cover;
+            background-blend-mode:darken;
+          
+          }
+          .img {
+            background: url("{{url_for('static', filename='heart.jpg')}}");
+              background-repeat: no-repeat;
+            background-size: auto;
+            background-size:100% 100%;
+            -webkit-filter: blur(0.3125rem);
+            -moz-filter: blur(0.3125rem);
+            -o-filter: blur(0.3125rem);
+            -ms-filter: blur(0.3125rem);
+            filter: blur(0.9375rem);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+          }
+    </style>
+</head>
+
+<body>
+    <div class="img"></div>
+    <center>
+        <div class="heading">
+            <div class="css-3d-text">HEART DISEASE PREDICTION</div>
+            <p style="font-size:48px" class="heart_emoji1">
+                &#128151;
+            </p>
+        </div>
+    </center>
+    <div class="output">
+        {%if result%}
+        <h2>{{result}}</h2>
+        {%endif%}
+    </div>
+    <!-- ----------------------------------------------------------------------------- -->
+    <form class="form" action="/predict_heart_disease" method="post">
+            <div class="type">
+                <!-- 1 -->
+                <h2 class="headings" id="age">Age (Years)</h2>
+                <input type="text" id="uiSqft" class="css-input" name="age" placeholder="00" required>
+                <!-- 2 -->
+                <h2 class="sex">Sex</h2>
+                <label>
+                    <input type="radio" name="sex"  required checked>
+                    <span id="male_label">Male</span>
+                </label>
+                <!-- Checkbox -->
+                <label>
+                    <input type="radio" name="sex" required>
+                    <span id="female_label">Female</span>
+                </label>
+                <h2 class="fbs_heading">Fasting blood sugar(fbs) </h2>
+                <label>
+                    <input type="radio" name="fbs" required>
+                    <span id="yes_label">YES</span>
+                </label>
+                <!-- Checkbox -->
+                <label>
+                    <input type="radio" name="fbs" required checked>
+                    <span id="no_label">NO</span>
+                </label>
+                <h2 class="ex_heading">Exercise induced angina </h2>
+                <label>
+                    <input type="radio" name="exang" required checked>
+                    <span id="ex_yes">YES</span>
+                </label>
+                <!-- Checkbox -->
+                <label>
+                    <input type="radio" name="exang" required>
+                    <span id="ex_no">NO</span>
+                </label>
+                <h2 class="ca_heading">Number of major vessels colored by flourosop (ca)</h2>
+                <label>
+                    <input type="radio" id="radio-fbs-0" name="ca" value="0" required checked />
+                    <span id="ca_0">0</span>
+                </label>
+                <label>
+                    <input type="radio" id="radio-fbs-1" name="ca" value="1" required/>
+                    <span id="ca_1">1</span>
+                </label>
+                <label>
+                    <input type="radio" id="radio-fbs-2" name="ca" value="2" checked required/>
+                    <span id="ca_2">2</span>
+                </label>
+                <label>
+                    <input type="radio" id="radio-fbs-3" name="ca" value="3" required/>
+                    <span id="ca_3">3</span>
+                </label>
+                <label>
+                    <input type="radio" id="radio-fbs-4" name="ca" value="4" required/>
+                    <span id="ca_4">4</span>
+                </label>
+            </div>
+            <div class="scroll">
+                <label for="trestbps">
+                    <h2 class="trestbps_heading">Resting blood pressure (mmHg)</h2>
+                </label>
+                <input type="range" id="trestbps_slider" class="range_items" name="trestbps" value="94" min="94"
+                    max="200" oninput="this.nextElementSibling.value = this.value">
+                <output id="trestbps_slider_out" class="slider_output">94</output>
+                <!-- 5 -->
+                <label for="chol">
+                    <h2 class="set_head">Serum cholestoral in mg/dl (chol)</h2>
+                </label>
+                <input type="range" class="range_items" value="126" name="chol" min="126" max="564"
+                    oninput="this.nextElementSibling.value = this.value">
+                <output class="slider_output">126</output>
+                <label for="oldpeak">
+                    <h2 class="set_head">ST depression induced by exercise relative to rest</h2>
+                </label>
+                <input type="range" class="range_items" name="oldpeak" value="0" min="0" max="6.2" step="0.1"
+                    oninput="this.nextElementSibling.value = this.value">
+                <output class="slider_output">0</output>
+                <label for="thalach">
+                    <h2 class="set_head">Maximum heart rate achieved(thalach)</h2>
+                </label>
+                <input type="range" class="range_items" name="thalach" value="71" min="71" max="202"
+                    oninput="this.nextElementSibling.value = this.value">
+                <output class="slider_output">71</output>
+            </div>
+            <div class="_select">
+                <label for="cp">
+                    <h2 class="cp_heading">Chest pain type (cp)</h2>
+                </label>
+                <div class="select">
+                            <select name="cp" id="cp" required>
+                        <option value="" disabled="disabled" selected="selected">Select Chest pain type</option>
+                                    <option value="typical angina">Typical angina</option>
+                                    <option value="atypical angina">Atypical angina</option>
+                                    <option value="non-anginal pain">Non-anginal pain</option>
+                        <option value="asymptomatic">Asymptomatic</option>
+                                
+                    </select>
+                    <div class="select_arrow" id="select_arrow1">
+                    </div>
+                </div>
+                <label for="restecg">
+                    <h2 class="rest_head">Resting electrocardiographic results(restecg)</h2>
+                </label>
+                <div class="select" id="restecg">
+                            <select name="restecg" required>
+                        <option value="" disabled="disabled" selected="selected">Select restecg</option>
+                                    <option value="normal">normal</option>
+                                    <option value="st-t wave abnormality">st-t wave abnormality</option>
+                                    <option value="left ventricular hypertrophy">left ventricular hypertrophy</option>
+                                
+                    </select>
+                    <div class="select_arrow">
+                    </div>
+                </div>
+                <label for="slope">
+                    <h2 class="slope_head">Slope of the peak exercise ST segment(slope)</h2>
+                </label>
+                <div class="select" id="slope">
+                            <select name="slope" required>
+                        <option value="" disabled="disabled" selected="selected">Select slope</option>
+                                    <option value="upsloping">Upsloping</option>
+                                    <option value="flat">Flat</option>
+                                    <option value="downsloping">Downsloping</option>
+                                
+                    </select>
+                    <div class="select_arrow">
+                    </div>
+                </div>
+                <label for="thal">
+                    <h2 class="thal_head">Thalassemia</h2>
+                </label>
+                <div class="select" id="thal">
+                            <select name="thal" id="thal" required>
+                        <option value="" disabled="disabled" selected="selected">Select Thalassemia category</option>
+                                    <option value="0">0</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="fixed defect">Fixed defect</option>
+                        <option value="reversable defect">Reversable defect</option>
+                                
+                    </select>
+                    <div class="select_arrow" id="thal_point">
+                    </div>
+                </div>
+                <!-- <input class="button submit" type="submit" name="DO YOU HAVE HEART DISEASE"> -->
+                <button type="submit" class="submit">DO YOU HAVE HEART DISEASE</button>
+            </form>
+            </div>
+           
+            <footer class="bg">
+        <p class="text-footer">
+            Copyright &copy; 2022 - All rights reserved | Model Built by Abdul Rehman
+        </p>
+    </footer>
+
+</body>
+
+</html>
